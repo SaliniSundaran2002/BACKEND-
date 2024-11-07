@@ -15,7 +15,7 @@ const authenticate = (req,res,next)=>{
             const verified = jwt.verify(token,secretkey)
             console.log(verified);
             req.username = verified.username
-            req.Role = verified.Role
+            req.Role = verified.role
             console.log(verified.Role);
             
             break
