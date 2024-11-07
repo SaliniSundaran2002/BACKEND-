@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Add transition effects to images */
+        .image-container {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+     <script>
+        window.onload = async ()=>{
+
+        }
+     </script>
+
+</head>
+
+<body class="bg-cover" style="background-image: url('/HTML/LibraryManagement/Images/pexels-cottonbro-6344231.jpg')">
+    <div class="flex p-4 bg-purple-100">
+        <div class="text-black">
+            <h1 class="text-3xl font-mono px-2 font-bold"><span class="text-blue-500">LIBRARY</span> MANAGEMENT SYSTEM</h1>
+        </div>
+        <div class="flex ml-auto text-md text-black font-bold">
+            <a href="home.html" class="ml-6 hover:text-blue-500">Home</a>
+            <a href="about.html" class="ml-6 hover:text-blue-500">About</a>
+            <a href="addbook.html" class="ml-6 hover:text-blue-500" id="admin" style="display: none;">Add Book</a>
+            <a href="viewbook.html" class="ml-6 hover:text-blue-500">View Book</a>
+            <a href="contact.html" class="ml-6 hover:text-blue-500">Contact</a>
+            <a href="login.html" class="ml-6 hover:text-blue-500">Login</a>
+        </div>
+    </div>
+
+    <div class="m-auto text-2xl font-bold font-sans bg-purple-100 w-fit h-fit rounded-lg py-2 mt-32">
+        <h2 class="text-center mt-16">WELCOME TO LIBRARY <span class="text-blue-500">ZONE</span></h2>
+        
+        <!-- Image and Text Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-6 mt-8">
+            
+            <!-- Kunjunnimash -->
+            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
+                <img src="Images/kunjunnimash-removebg-preview.png" alt="kunjunnimash" class="w-full h-auto rounded-lg transition-transform mb-4">
+                <p class="font-thin text-lg text-center">വായിച്ചാലും വളരും വായിച്ചില്ലേലും വളരും. പക്ഷെ വായിച്ച് വളർന്നാൽ വിളയും, വായിക്കാതെ വളർന്നാൽ വളയും.....</p>
+            </div>
+
+            <!-- Madhavikutty -->
+            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
+                <img src="Images/madhavikutty-removebg-preview.png" alt="madhavikutty" class="w-full h-auto rounded-lg transition-transform mb-4">
+                <p class="font-thin text-lg text-center">എനിക്ക് സ്നേഹം വേണം. അത് പ്രകടമായിത്തന്നെ കിട്ടണം. ഉള്ളിൽ സ്നേഹമുണ്ട് പ്രകടിപ്പിക്കാനറിയില്ല എന്നതിൽ ഞാൻ വിശ്വസിക്കുന്നില്ല. ശവകുടീരത്തിൽ വന്ന് പൂവിട്ടാൽ ഞാനറിയുമോ...?</p>
+            </div>
+
+            <!-- Basheer -->
+            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
+                <img src="Images/basheer.png" alt="basheer" class="w-64 h-auto rounded-lg transition-transform mb-4">
+                <p class="font-thin text-lg text-center">എൻ്റെ എഴുത്തുകൾ വായിച്ചു ഏറ്റവും കൂടുതൽ ചിരിച്ചത് ഞാനായിരിക്കും കരഞ്ഞതും ഞാനായിരിക്കും കാരണം അതൊക്കെ എന്റെ അനുഭവങ്ങളായിരുന്നു!</p>
+            </div>
+
+            <!-- Benyamin -->
+            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
+                <img src="Images/benyamin-removebg-preview.png" alt="benyamin" class="w-64 h-auto rounded-lg transition-transform mb-4">
+                <p class="font-thin text-lg text-center">നാം അനുഭവിക്കാത്ത ജീവിതങ്ങളെല്ലാം നമുക്ക് വെറും കെട്ടുകഥകൾ മാത്രമാണ്...</p>
+            </div>
+
+            <!-- Abraham -->
+            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
+                <img src="Images/abraham-removebg-preview.png" alt="abraham" class="w-full h-auto rounded-lg transition-transform mb-4">
+                <p class="font-thin text-lg text-center">സൗഹൃദമാണ് സൗഹൃദമാണ് നിങ്ങളുടെ ഏറ്റവും വലിയ ദൗർബല്യമെങ്കിൽ നിങ്ങളാണ് ലോകത്തിലെ ഏറ്റവും വലിയ ശക്തൻ</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

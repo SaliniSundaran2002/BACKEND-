@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        async function signup(event) {
+            event.preventDefault();
+            const uname = document.getElementById("username").value
+            const em = document.getElementById("email").value
+            const pass = document.getElementById("password").value
+            const role = document.getElementById("role").value
+
+            const response = await fetch("http://127.0.0.1:2000/signup", {
+                method: "POST",
+                // credentials: "include",
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify({
+                    Username: uname,
+                    Email: em,
+                    Password: pass,
+                    Role: role
+                })
+
+            })
+            console.log(response.status);
+            if(response.status == 200){
+                alert("successfully registered")
+                window.location.href = "/Frontend/login.html"
+            } else if(response.status == 404){
+                alert("Already registered")
+                window.location.href = "/Frontend/login.html"
+            } else{
+                alert("Error")
+            }
+
+
+
+        }
+    </script>
+</head>
+
+<body class="bg-cover bg-center min-h-screen flex flex-col items-center"
+    style="background-image: url(/Frontend/Images/pexels-pixabay-207662.jpg)">
+    <!-- Navbar -->
+    <div class="flex items-center justify-between w-full p-4 bg-purple-100 bg-opacity-60 backdrop-blur-md shadow-md">
+        <div class="text-black sm:text-sm">
+            <h1 class="text-3xl font-mono font-bold"><span class="text-blue-500">LIBRARY</span> MANAGEMENT SYSTEM</h1>
+        </div>
+        <div class="flex items-center">
+            <nav class="hidden md:flex space-x-6 text-md text-black font-bold">
+                <a href="home.html" class="hover:text-blue-500 transition duration-300">Home</a>
+                <a href="about.html" class="hover:text-blue-500 transition duration-300">About</a>
+                <a href="addbook.html" class="hover:text-blue-500 transition duration-300">Add Book</a>
+                <a href="viewbook.html" class="hover:text-blue-500 transition duration-300">View Book</a>
+                <a href="contact.html" class="hover:text-blue-500 transition duration-300">Contact</a>
+                <a href="login.html" class="hover:text-blue-500 transition duration-300">Login</a>
+            </nav>
+            <button id="menuButton" class="md:hidden text-black text-lg sm:text-xl ml-4">☰</button>
+        </div>
+    </div>
+
+    <!-- Mobile Navbar -->
+    <nav id="mobileNavbar"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <ul class="flex flex-col space-y-4 p-6 text-white text-sm">
+            <li><a href="home.html" class="hover:text-blue-300 transition duration-300">Home</a></li>
+            <li><a href="about.html" class="hover:text-blue-300 transition duration-300">About</a></li>
+            <li><a href="addbook.html" class="hover:text-blue-300 transition duration-300">Add Book</a></li>
+            <li><a href="viewbook.html" class="hover:text-blue-300 transition duration-300">View Book</a></li>
+            <li><a href="contact.html" class="hover:text-blue-300 transition duration-300">Contact</a></li>
+            <li><a href="login.html" class="hover:text-blue-300 transition duration-300">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Welcome Text -->
+    <h2
+        class="text-center mt-16 text-4xl font-bold font-sans text-white shadow-lg backdrop-blur-md bg-opacity-60 px-4 py-2 rounded-lg ">
+        WELCOME TO LIBRARY <span class="text-blue-500">ZONE</span>
+    </h2>
+
+
+    <!-- Sign-up Form -->
+    <div
+        class="bg-purple-100 bg-opacity-70 backdrop-blur-lg shadow-xl mt-12 sm:mt-16 w-full sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12 m-auto rounded-lg p-8 transition-transform transform hover:scale-105 duration-300">
+        <h2 class="text-center font-bold font-sans text-2xl text-blue-500">SIGN UP</h2>
+
+        <form class="mt-8 space-y-4">
+            <input type="text" placeholder="User Name"
+                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
+                id="username">
+            <input type="text" placeholder="Email"
+                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
+                id="email">
+            <input type="password" placeholder="Password"
+                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
+                id="password">
+            <select id="role"
+                class="w-full h-12 mt-3 rounded-lg px-3 bg-white bg-opacity-70 focus:bg-opacity-100 transition duration-300 focus:outline-none">
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
+
+            <button type="submit"
+                class="w-full bg-blue-500 rounded-lg h-12 text-white font-bold hover:bg-blue-600 transition duration-300" onclick="signup(event)">
+                SIGN UP
+            </button>
+        </form>
+
+        <p class="mt-4 text-center text-rose-700 font-bold">Already have an account?
+            <a href="login.html" class="text-blue-500 hover:underline">LOGIN</a>
+        </p>
+    </div>
+
+    <script>
+        // Toggle the mobile navbar on button click
+        document.getElementById('menuButton').addEventListener('click', function () {
+            const mobileNavbar = document.getElementById('mobileNavbar');
+            mobileNavbar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+
+</html>

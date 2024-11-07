@@ -1,0 +1,247 @@
+import { json, Router } from "express";
+import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
+import { authenticate } from "../Middleware/auth.js";
+import dotenv from "dotenv"
+
+dotenv.config();
+const adminRoute = Router();
+const user = new Map();
+const secretKey = process.env.secretKey;
+adminRoute.get('/', (req, res) => {
+    res.send("Hello World");
+})
+
+adminRoute.post('/signup', async (req, res) => {
+    try {
+        console.log("Hi");
+        const data = req.body;
+        console.log(data.firstName);
+        const { firstName,
+            lastName,
+            username,
+            password,
+            role } = data;
+        console.log(firstName);
+        const newP = await bcrypt.hash(password, 10)
+        console.log(newP);
+        if (user.has(username)) {
+            res.status(400).json({ message: "Already Registerd" })
+        } else {
+            res.status(200).json({ message: "Successfully Registerd!" })
+            user.set(username, {
+                firstName, lastName, newP, role
+            });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "error occured!" })
+    }
+
+})
+
+adminRoute.post('/login', async (req, res) => {
+    const { username, password } = req.body
+    const result = user.get(username)
+    console.log(result);
+    const valid = await bcrypt.compare(password, result.newP)
+    if (!result) {
+        res.status(404).json({ message: "Invalid username and password" })
+    }
+    if (!valid) {
+        res.status(404).json({ message: "Invalid username and password" })
+    }
+    else {
+
+
+        // console.log(valid)
+        const token = jwt.sign({ username: username, role: result.role }, secretKey, { expiresIn: '24h' })
+        console.log("tocken: ", token)
+        res.cookie('authToken', token, { httpOnly: true })
+        res.status(200).json({ message: "Successfully logged" })
+
+    }
+
+})
+
+const course = new Map()
+adminRoute.post('/addcourse', authenticate, (req, res) => {
+    console.log("Username : ", req.username);
+    console.log("Userrole : ", req.role);
+
+    try {
+
+        // const course = new Map()
+        if (req.role == 'admin') {
+            const { courseId, courseName, courseType, description, price } = req.body
+            course.set(courseId, { courseName, courseType, description, price })
+            // console.log(details);
+            console.log("Course Details : ", course);
+
+            // console.log();
+            res.status(200).json({ message: "Course added successfully" })
+        } else {
+            console.log("Only the admin can add a course.");
+            res.status(400).json({ message: "Not success!" })
+
+
+        }
+    } catch (error) {
+        console.log("Error")
+    }
+
+})
+
+// using params
+adminRoute.get('/getcourse/:id', authenticate, (req, res) => {
+    console.log("Details: ", course)
+    const searchTerm = req.params.id;
+    const result = []
+    if (searchTerm) {
+        for (const [id, item] of course) {
+            if (id == searchTerm || item.courseName.includes(searchTerm) || item.courseType.includes(searchTerm) || item.description.includes(searchTerm)) {
+                result.push({ id, ...item })
+                console.log("Result : ", result);
+                res.status(200).json({ message: "Search term found" })
+
+            } else {
+                console.log("No search term found");
+                res.status(400).json({ message: "" })
+
+            }
+        }
+
+    }
+
+
+
+})
+
+
+// using query
+adminRoute.get('/getcourse',(req,res)=>{
+    try{
+   const search= req.query.courseName; 
+   console.log(search);
+        const result = course.get(search)
+        if (result) {
+
+            res.send(result);
+        }
+        else {
+            res.status(404).json({ message: "No course found,Check the name" })
+        }
+    }
+    catch (error) {
+        res.status(400).json({ message: "Check the input" })
+    }
+ })
+
+
+
+adminRoute.put('/updatecourse', authenticate, (req, res) => {
+    try {
+
+        if (req.role == 'admin') {
+            const { courseId, courseName, courseType, description, price } = req.body
+            if (course.has(courseId)) {
+                const existingCourse = course.get(courseId)
+                console.log("Existing code : ", existingCourse);
+
+                const updatecourse = {
+                    courseName: courseName || existingCourse.courseName,
+                    courseType: courseType || existingCourse.courseType,
+                    description: description || existingCourse.description,
+                    price: price || existingCourse.price
+                }
+                course.set(courseId, updatecourse)
+                console.log("Updated Course : ", updatecourse);
+                res.status(200).json({ message: "Course updated successfully" })
+
+
+            } else {
+                console.log("Course not found for id : ", courseId);
+                res.status(404).json({ message: "Course not found " })
+
+            }
+
+        } else {
+            console.log("Only admin can update courses.");
+            res.status(404).json({ message: "Access denied: only for admins can update courses" })
+        }
+    } catch (error) {
+        console.log("Error");
+        res.status(500).json({ message: "Error..." })
+
+    }
+})
+
+
+
+adminRoute.delete('/deletecourse/:id',authenticate,(req,res)=>{
+    try{
+        const data = req.params.id
+        console.log(data);
+        const indata = parseInt(data)
+        
+        
+        
+if(req.role == 'admin'){
+    console.log(course);
+    
+    // const d1=course.get(data);
+    // console.log(d1);
+    
+    if(course.has(indata)){
+        course.delete(indata)
+        console.log("Successfully deleted");
+        res.status(200).json({message:"Deleted"})
+        
+    } else{
+        console.log("id not found");
+        res.status(200).json({message:"not found"})
+    }
+} else{
+    console.log("Admin Only");
+    
+}
+    } catch(error){
+        res.send(error)
+    }
+})
+
+adminRoute.delete('/logout',(req,res)=>{
+    res.clearCookie('authToken')
+    res.status(200).json({message:"Logged Out"})
+    console.log("Logged Out");
+    
+})
+
+
+adminRoute.get('/viewuser',authenticate,(req,res)=>{
+    try{
+    const user=req.role;
+    res.json({user});}
+    catch{
+        res.status(404).json({message:'user not authorized'});
+    }
+})
+
+adminRoute.get('/viewcourse', async(req,res)=>{
+    try{
+        console.log(course.size);
+
+        if(course.size!=0){
+           
+            
+        res.send(Array.from(course.entries()))
+    }
+else{
+    res.status(404).json({message:'Not Found'});
+}}
+    catch{
+        res.status(404).json({message:"Internal error"})
+    }
+})
+
+
+export { adminRoute };
