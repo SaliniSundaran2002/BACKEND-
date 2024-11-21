@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Library Management - Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Add transition effects to images */
+        /* Image transition effects */
         .image-container {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -17,68 +17,172 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
-     <script>
-        window.onload = async ()=>{
-
+    <script>
+        window.onload = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8080/viewuser", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: { 'Content-Type': 'application/json' }
+                });
+    
+                if (!response.ok) {
+                    console.log(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                console.log(data);
+    
+                if (data.user === 'admin') {
+                    document.getElementById("admin").style.display = 'block';
+                    document.getElementById("admin-mobile").style.display = 'block';
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
-     </script>
-
+    </script>
 </head>
 
-<body class="bg-cover" style="background-image: url('/HTML/LibraryManagement/Images/pexels-cottonbro-6344231.jpg')">
-    <div class="flex p-4 bg-purple-100">
-        <div class="text-black">
-            <h1 class="text-3xl font-mono px-2 font-bold"><span class="text-blue-500">LIBRARY</span> MANAGEMENT SYSTEM</h1>
+<body class="bg-gray-100 bg-cover" style="background-image: url('/images/pexels-technobulka-2908984.jpg')">
+
+    <!-- Navbar -->
+    <nav class="top-0 z-50 ">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 mx-0">
+                <img src="/images/Black_Grey_Minimalist_Book_Club_Logo__1_-removebg-preview.png" alt="logo"
+                    class="w-20 h-20">
+                <h1 class="text-white text-2xl font-bold">BOOK NEST</h1>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="block lg:hidden">
+                <button id="mobile-menu-toggle" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Desktop menu -->
+            <div class="hidden lg:flex space-x-6 font-bold text-md">
+                <a href="home.html" class="text-white hover:text-blue-200 transition duration-300">Home</a>
+                <a href="about.html" class="text-white hover:text-blue-200 transition duration-300">About</a>
+                <a href="addbook.html" class="text-white hover:text-blue-200 transition duration-300" id="admin" style="display: none;">Add Book</a>
+                <a href="viewbook.html" class="text-white hover:text-blue-200 transition duration-300">View Book</a>
+                <a href="contact.html" class="text-white hover:text-blue-200 transition duration-300">Contact</a>
+               
+                <a href="login.html" class="text-white hover:text-blue-200 transition duration-300">Logout</a>
+            </div>
         </div>
-        <div class="flex ml-auto text-md text-black font-bold">
-            <a href="home.html" class="ml-6 hover:text-blue-500">Home</a>
-            <a href="about.html" class="ml-6 hover:text-blue-500">About</a>
-            <a href="addbook.html" class="ml-6 hover:text-blue-500" id="admin" style="display: none;">Add Book</a>
-            <a href="viewbook.html" class="ml-6 hover:text-blue-500">View Book</a>
-            <a href="contact.html" class="ml-6 hover:text-blue-500">Contact</a>
-            <a href="login.html" class="ml-6 hover:text-blue-500">Login</a>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden inset-0 transform -translate-x-full transition-transform duration-300 mt-2 flex">
+
+        <a href="home.html" class="block p-2 text-white  font-semibold">Home</a>
+        <a href="about.html" class="block p-2 text-white  font-semibold">About</a>
+        <a href="addbook.html" class="block p-2 text-white  font-semibold hidden" id="admin-mobile" style="display: none;">Add Book</a>
+        <a href="viewbook.html" class="block p-2 text-white  font-semibold">View Book</a>
+        <a href="contact.html" class="block p-2 text-white  font-semibold">Contact</a>
+        <a href="#" class="block p-2 text-white font-semibold" id="logout-btn">Logout</a>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="container mx-auto text-center text-white my-16">
+        <h1 class="text-4xl md:text-5xl font-bold text-blue-600">WELCOME TO BOOK <span class="text-white">NEST</span></h1>
+        <p class="text-lg mt-4">Discover, Learn, and Grow with our vast collection of knowledge.</p>
+    </div>
+
+    <!-- Image and Text Section -->
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-6">
+        <!-- Kunjunnimash -->
+        <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="Images/kunjunnimash-removebg-preview.png" alt="Kunjunnimash" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- Kunjunni Mash</h2>
+            <p class="font-light text-lg text-gray-700 text-center">വായിച്ചാലും വളരും വായിച്ചില്ലേലും വളരും. പക്ഷെ വായിച്ച് വളർന്നാൽ വിളയും, വായിക്കാതെ വളർന്നാൽ വളയും.....</p>
+        </div>
+
+        <!-- Madhavikutty -->
+        <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="Images/madhavikutty-removebg-preview.png" alt="Madhavikutty" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- Madhavikutty</h2>
+            <p class="font-light text-lg text-gray-700 text-center">എനിക്ക് സ്നേഹം വേണം. അത് പ്രകടമായിത്തന്നെ കിട്ടണം. ഉള്ളിൽ സ്നേഹമുണ്ട് പ്രകടിപ്പിക്കാനറിയില്ല എന്നതിൽ ഞാൻ വിശ്വസിക്കുന്നില്ല. ശവകുടീരത്തിൽ വന്ന് പൂവിട്ടാൽ ഞാനറിയുമോ...?</p>
+        </div>
+
+        <!-- Basheer -->
+        <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="Images/basheer.png" alt="Basheer" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- Vaikom Muhammad Basheer</h2>
+            <p class="font-light text-lg text-gray-700 text-center">എൻ്റെ എഴുത്തുകൾ വായിച്ചു ഏറ്റവും കൂടുതൽ ചിരിച്ചത് ഞാനായിരിക്കും കരഞ്ഞതും ഞാനായിരിക്കും കാരണം അതൊക്കെ എന്റെ അനുഭവങ്ങളായിരുന്നു!</p>
+        </div>
+
+        <!-- Benyamin -->
+        <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="Images/benyamin-removebg-preview.png" alt="Benyamin" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- Benyamin</h2>
+            <p class="font-light text-lg text-gray-700 text-center">നാം അനുഭവിക്കാത്ത ജീവിതങ്ങളെല്ലാം നമുക്ക് വെറും കെട്ടുകഥകൾ മാത്രമാണ്...</p>
+        </div>
+
+        <!-- Abraham -->
+        <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="Images/abraham-removebg-preview.png" alt="Abraham" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- Abraham Lincoln</h2>
+            <p class="font-light text-lg text-gray-700 text-center">സൗഹൃദമാണ് നിങ്ങളുടെ ഏറ്റവും വലിയ ദൗർബല്യമെങ്കിൽ നിങ്ങളാണ് ലോകത്തിലെ ഏറ്റവും വലിയ ശക്തൻ</p>
+        </div>
+
+         <!-- KR Meera -->
+         <div class="image-container bg-white p-6 rounded-lg shadow-lg">
+            <img src="/images/images-removebg-preview (1).png" alt="krmeera" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-black font-bold">- K.R. Meera</h2>
+            <p class="font-light text-lg text-gray-700 text-center">എൻ്റെ എഴുത്തുകൾ ഓരോ തവണ ആത്മാവ് കൊല്ലപ്പെടുമ്പോഴും മൂന്നാം ദിവസം ഉയർത്തെഴുന്നേൽക്കുമെന്നും പിന്നെ വേദനയില്ലെന്നും തിരിച്ചറിയുക.</p>
         </div>
     </div>
 
-    <div class="m-auto text-2xl font-bold font-sans bg-purple-100 w-fit h-fit rounded-lg py-2 mt-32">
-        <h2 class="text-center mt-16">WELCOME TO LIBRARY <span class="text-blue-500">ZONE</span></h2>
-        
-        <!-- Image and Text Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-6 mt-8">
-            
-            <!-- Kunjunnimash -->
-            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
-                <img src="Images/kunjunnimash-removebg-preview.png" alt="kunjunnimash" class="w-full h-auto rounded-lg transition-transform mb-4">
-                <p class="font-thin text-lg text-center">വായിച്ചാലും വളരും വായിച്ചില്ലേലും വളരും. പക്ഷെ വായിച്ച് വളർന്നാൽ വിളയും, വായിക്കാതെ വളർന്നാൽ വളയും.....</p>
+        <!-- Footer -->
+        <footer class="bg-slate-800 py-2">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+                <p class="text-white text-center">© 2024 Book Nest. All rights reserved.</p>
             </div>
+        </footer>
+    
+        <script>
+            // Toggle mobile menu
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+    
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('translate-x-0');
+                mobileMenu.classList.toggle('-translate-x-full');
+            });
 
-            <!-- Madhavikutty -->
-            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
-                <img src="Images/madhavikutty-removebg-preview.png" alt="madhavikutty" class="w-full h-auto rounded-lg transition-transform mb-4">
-                <p class="font-thin text-lg text-center">എനിക്ക് സ്നേഹം വേണം. അത് പ്രകടമായിത്തന്നെ കിട്ടണം. ഉള്ളിൽ സ്നേഹമുണ്ട് പ്രകടിപ്പിക്കാനറിയില്ല എന്നതിൽ ഞാൻ വിശ്വസിക്കുന്നില്ല. ശവകുടീരത്തിൽ വന്ന് പൂവിട്ടാൽ ഞാനറിയുമോ...?</p>
-            </div>
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
 
-            <!-- Basheer -->
-            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
-                <img src="Images/basheer.png" alt="basheer" class="w-64 h-auto rounded-lg transition-transform mb-4">
-                <p class="font-thin text-lg text-center">എൻ്റെ എഴുത്തുകൾ വായിച്ചു ഏറ്റവും കൂടുതൽ ചിരിച്ചത് ഞാനായിരിക്കും കരഞ്ഞതും ഞാനായിരിക്കും കാരണം അതൊക്കെ എന്റെ അനുഭവങ്ങളായിരുന്നു!</p>
-            </div>
+        // Send a request to the server to handle the logout
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin', // Include cookies with the request
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to login page or home page
+                window.location.href = '/login.html';
+            } else {
+                alert('Logout failed!');
+            }
+        })
+        .catch(error => console.error('Error logging out:', error));
+    });
 
-            <!-- Benyamin -->
-            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
-                <img src="Images/benyamin-removebg-preview.png" alt="benyamin" class="w-64 h-auto rounded-lg transition-transform mb-4">
-                <p class="font-thin text-lg text-center">നാം അനുഭവിക്കാത്ത ജീവിതങ്ങളെല്ലാം നമുക്ക് വെറും കെട്ടുകഥകൾ മാത്രമാണ്...</p>
-            </div>
-
-            <!-- Abraham -->
-            <div class="image-container bg-white p-6 rounded-lg shadow-lg transition-transform">
-                <img src="Images/abraham-removebg-preview.png" alt="abraham" class="w-full h-auto rounded-lg transition-transform mb-4">
-                <p class="font-thin text-lg text-center">സൗഹൃദമാണ് സൗഹൃദമാണ് നിങ്ങളുടെ ഏറ്റവും വലിയ ദൗർബല്യമെങ്കിൽ നിങ്ങളാണ് ലോകത്തിലെ ഏറ്റവും വലിയ ശക്തൻ</p>
-            </div>
-        </div>
-
-    </div>
-
+        </script>
 </body>
 
 </html>

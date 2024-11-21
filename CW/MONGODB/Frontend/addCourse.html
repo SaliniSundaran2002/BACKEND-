@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      const addcourse = new Map()
+      async function AddCourse(event) {
+        event.preventDefault()
+        const CourseName = document.getElementById("CourseName").value;
+        const CourseId = document.getElementById("CourseId").value;
+        const CourseType = document.getElementById("CourseType").value;
+        const Description = document.getElementById("Description").value;
+        const Price = document.getElementById("Price").value;
+
+        console.log(CourseName, CourseId, CourseType, Description, Price);
+        const response = await fetch("http://127.0.0.1:8001/addcourse", {
+          method:'POST',
+                credentials:"include",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+          body: JSON.stringify({
+            courseId: CourseId,
+            courseName: CourseName,
+            courseType: CourseType,
+            description: Description,
+            price: Price,
+          }),
+        });
+        console.log(response.status);
+        if(addcourse.has(CourseId)){
+          console.log("Already added!");
+          alert("Already added!")
+          
+        }
+        else if(response.status == 200){
+          addcourse.set(CourseId,{CourseName,CourseType,Description,Price})
+          // console.log(addcourse);          
+            alert("Course Successfylly Added!")
+        } else{
+        alert("Internal error !");
+        }
+      }
+    </script>
+  </head>
+
+  <body class="bg-purple-100">
+    <div class="bg-slate-50 h-16 w-full shadow-xl">
+      <div class="float-left w-12">
+        <img src="/HTML/kba_logo.webp" />
+      </div>
+      <div>
+        <nav>
+          <ul class="flex flex-row justify-end space-x-20 p-4">
+            <li>
+              <a href="homepage.html" class="font-sans font-bold text-purple-950"
+                >HOME</a
+              >
+            </li>
+            <li>
+              <a href="course.html" class="text-purple-950 font-sans font-bold"
+                >COURSES</a
+              >
+            </li>
+
+            <li>
+              <a
+                href="addCourse.html"
+                class="text-purple-950 font-sans font-bold"
+                >ADD COURSE</a
+              >
+            </li>
+            <li>
+              <a href="contact.html" class="text-purple-950 font-sans font-bold"
+                >CONTACT US</a
+              >
+            </li>
+            <li>
+              <a href="login.html" class="text-purple-950 font-sans font-bold"
+                >LOGOUT</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div
+      class="bg-purple-100 p-8 w-5/12 justify-center m-auto mt-3 rounded-lg shadow-lg shadow-indigo-700"
+    >
+      <div>
+        <h4 class="text-2xl text-purple-950 text-center font-sans font-bold">
+          Add Course
+        </h4>
+      </div>
+      <div class="mt-12">
+        <label class="text-purple-950">Course Name</label>
+        <input
+          type="text"
+          placeholder="eg.Certified Blockchain Associate"
+          required
+          class="w-full h-10 mt-4"
+          id="CourseName"
+        />
+      </div>
+
+      <div class="mt-5">
+        <label class="text-purple-950">Course Id</label>
+        <input
+          type="text"
+          placeholder="eg. 1"
+          required
+          class="w-full h-10 mt-4"
+          id="CourseId"
+        />
+      </div>
+      <div class="mt-5">
+        <label class="text-purple-950">Course Type</label><br />
+        <select class="w-full h-10 mt-4 bg-slate-50" id="CourseType">
+          <option value="Self-Paced">Self-Paced</option>
+          <option value="hybrid">Hybrid</option>
+          <option value="part-time">Part-Time</option>
+          <option value="Full-time">Full-Time</option>
+        </select>
+      </div>
+      <div class="mt-5">
+        <label class="text-purple-950">Description</label><br />
+        <textarea
+          cols="77"
+          rows="7"
+          placeholder="small description on the Course"
+          required
+          class="w-full h-40 mt-4"
+          id="Description"
+        ></textarea>
+      </div>
+      <div class="mt-5">
+        <label class="text-purple-950">Price</label>
+        <select class="w-full h-10 mt-4 bg-slate-50" id="Price">
+          <option value="Rs5000">Rs.5000</option>
+          <option value="Rs6000">Rs.6000</option>
+          <option value="Rs15000">Rs.15000</option>
+          <option value="Rs20000">Rs.20000</option>
+        </select>
+      </div>
+      <div class="mt-12">
+        <a href="#">
+          <button
+            type="submit"
+            class="border-2 rounded-3xl bg-purple-500 w-full h-10 text-white"
+            onclick="AddCourse(event)">
+            Add Course
+          </button>
+        </a>
+      </div>
+    </div>
+  </body>
+  <footer>
+    <p class="bg-purple-200 h-12 text-center pt-2 text-purple-400 mt-96">
+      &copy; This page All rights reserved
+    </p>
+  </footer>
+</html>

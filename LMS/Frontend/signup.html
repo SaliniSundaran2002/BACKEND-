@@ -4,124 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignUp</title>
+    <title>Library Management - Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         async function signup(event) {
-            event.preventDefault();
+            event.preventDefault()
+            const fname = document.getElementById("name").value
             const uname = document.getElementById("username").value
-            const em = document.getElementById("email").value
-            const pass = document.getElementById("password").value
             const role = document.getElementById("role").value
+            const email = document.getElementById("email").value
+            const pass = document.getElementById("password").value
+            console.log(fname, uname, pass, email, role);
 
-            const response = await fetch("http://127.0.0.1:2000/signup", {
+            const response = await fetch("http://127.0.0.1:8080/signup", {
                 method: "POST",
-                // credentials: "include",
-                headers: { 'Content-Type':'application/json' },
+                credentials: "include",
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    Username: uname,
-                    Email: em,
-                    Password: pass,
-                    Role: role
+                    fullname: fname,
+                    username: uname,
+                    email: email,
+                    password: pass,
+                    role: role
                 })
-
             })
-            console.log(response.status);
-            if(response.status == 200){
-                alert("successfully registered")
-                window.location.href = "/Frontend/login.html"
-            } else if(response.status == 404){
-                alert("Already registered")
-                window.location.href = "/Frontend/login.html"
-            } else{
-                alert("Error")
+            // console.log(response.status);
+            if (response.status == 200) {
+                alert("Sign up successful! Welcome to the Library Nest.")
+                window.location.href = "http://127.0.0.1:5500/Frontend/login.html"
+            } else if (response.status === 400) {
+                
+                alert("Sign up failed: Username already exists. Please choose a different username.");
+            } else {
+                alert("Sign up failed. Please try again later.");
             }
-
-
 
         }
     </script>
 </head>
 
-<body class="bg-cover bg-center min-h-screen flex flex-col items-center"
-    style="background-image: url(/Frontend/Images/pexels-pixabay-207662.jpg)">
-    <!-- Navbar -->
-    <div class="flex items-center justify-between w-full p-4 bg-purple-100 bg-opacity-60 backdrop-blur-md shadow-md">
-        <div class="text-black sm:text-sm">
-            <h1 class="text-3xl font-mono font-bold"><span class="text-blue-500">LIBRARY</span> MANAGEMENT SYSTEM</h1>
-        </div>
-        <div class="flex items-center">
-            <nav class="hidden md:flex space-x-6 text-md text-black font-bold">
-                <a href="home.html" class="hover:text-blue-500 transition duration-300">Home</a>
-                <a href="about.html" class="hover:text-blue-500 transition duration-300">About</a>
-                <a href="addbook.html" class="hover:text-blue-500 transition duration-300">Add Book</a>
-                <a href="viewbook.html" class="hover:text-blue-500 transition duration-300">View Book</a>
-                <a href="contact.html" class="hover:text-blue-500 transition duration-300">Contact</a>
-                <a href="login.html" class="hover:text-blue-500 transition duration-300">Login</a>
-            </nav>
-            <button id="menuButton" class="md:hidden text-black text-lg sm:text-xl ml-4">☰</button>
-        </div>
-    </div>
+<body class="flex items-center justify-center min-h-screen bg-cover"
+    style="background-image: url('/images/Read\ A\ Book\ Motivational\ Quote\ Instagram\ Post.png')">
+    <div class=" bg-opacity-90 rounded-lg shadow-lg p-8 max-w-md w-full">
+        <h2 class="text-3xl font-bold text-center text-slate-300 mb-8">Sign Up</h2>
+        <form class="space-y-6" onsubmit="signup(event)">
 
-    <!-- Mobile Navbar -->
-    <nav id="mobileNavbar"
-        class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-        <ul class="flex flex-col space-y-4 p-6 text-white text-sm">
-            <li><a href="home.html" class="hover:text-blue-300 transition duration-300">Home</a></li>
-            <li><a href="about.html" class="hover:text-blue-300 transition duration-300">About</a></li>
-            <li><a href="addbook.html" class="hover:text-blue-300 transition duration-300">Add Book</a></li>
-            <li><a href="viewbook.html" class="hover:text-blue-300 transition duration-300">View Book</a></li>
-            <li><a href="contact.html" class="hover:text-blue-300 transition duration-300">Contact</a></li>
-            <li><a href="login.html" class="hover:text-blue-300 transition duration-300">Logout</a></li>
-        </ul>
-    </nav>
+            <!-- Full Name -->
+            <div>
+                <label for="name" class="block text-white font-semibold">Full Name</label>
+                <input type="text" id="name" name="name" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200">
+            </div>
 
-    <!-- Welcome Text -->
-    <h2
-        class="text-center mt-16 text-4xl font-bold font-sans text-white shadow-lg backdrop-blur-md bg-opacity-60 px-4 py-2 rounded-lg ">
-        WELCOME TO LIBRARY <span class="text-blue-500">ZONE</span>
-    </h2>
+            <!-- Username -->
+            <div>
+                <label for="username" class="block text-white font-semibold">Username</label>
+                <input type="text" id="username" name="username" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200">
+            </div>
+
+            <!-- Role -->
+            <div>
+                <label for="role" class="block text-white font-semibold">Role</label>
+                <select id="role" name="role" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200 ">
+                    <option value="" disabled selected>Select role</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
 
 
-    <!-- Sign-up Form -->
-    <div
-        class="bg-purple-100 bg-opacity-70 backdrop-blur-lg shadow-xl mt-12 sm:mt-16 w-full sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12 m-auto rounded-lg p-8 transition-transform transform hover:scale-105 duration-300">
-        <h2 class="text-center font-bold font-sans text-2xl text-blue-500">SIGN UP</h2>
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-white font-semibold">Email</label>
+                <input type="email" id="email" name="email" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200">
+            </div>
 
-        <form class="mt-8 space-y-4">
-            <input type="text" placeholder="User Name"
-                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
-                id="username">
-            <input type="text" placeholder="Email"
-                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
-                id="email">
-            <input type="password" placeholder="Password"
-                class="w-full h-12 rounded-lg px-3 bg-white bg-opacity-70 placeholder-gray-500 focus:bg-opacity-100 transition duration-300 focus:outline-none"
-                id="password">
-            <select id="role"
-                class="w-full h-12 mt-3 rounded-lg px-3 bg-white bg-opacity-70 focus:bg-opacity-100 transition duration-300 focus:outline-none">
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-            </select>
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-white font-semibold">Password</label>
+                <input type="password" id="password" name="password" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200">
+            </div>
 
-            <button type="submit"
-                class="w-full bg-blue-500 rounded-lg h-12 text-white font-bold hover:bg-blue-600 transition duration-300" onclick="signup(event)">
-                SIGN UP
-            </button>
+
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit"
+                    class="w-full bg-slate-700 text-white py-2 rounded-lg hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 font-bold">
+                    Sign Up
+                </button>
+            </div>
+
+            <!-- Login Link -->
+            <p class="text-center text-slate-100 mt-4">
+                Already have an account?
+                <a href="login.html" class="text-blue-500 hover:underline">Log in here</a>.
+            </p>
         </form>
-
-        <p class="mt-4 text-center text-rose-700 font-bold">Already have an account?
-            <a href="login.html" class="text-blue-500 hover:underline">LOGIN</a>
-        </p>
     </div>
-
-    <script>
-        // Toggle the mobile navbar on button click
-        document.getElementById('menuButton').addEventListener('click', function () {
-            const mobileNavbar = document.getElementById('mobileNavbar');
-            mobileNavbar.classList.toggle('-translate-x-full');
-        });
-    </script>
 </body>
 
 </html>

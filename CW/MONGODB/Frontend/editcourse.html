@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<!-- <script>
+     window.onload=async()=>{
+        const name=localStorage.getItem('course');
+            console.log(name);
+
+            const response = await fetch(`http://127.0.0.1:8001/getcourse?courseName=${name}`)
+            console.log(response);
+            data=await response.json();
+            console.log("Data",data);
+            console.log("name",data.courseName);
+            
+            
+            if(response.status!=404){
+            console.log(data);
+            document.getElementById("cname").value=data.courseName;
+            document.getElementById("cType").value=data.CourseType;
+            document.getElementById("price").value=data.price;
+            document.getElementById("desc").innerHTML=data.description;
+
+            }
+            else{
+                window.location.href='/notfound.html';
+            }
+        
+    }
+
+
+async function updateCourse(event){
+    event.preventDefault()
+    const Cname = document.getElementById("cname").value;
+    const Ctype = document.getElementById("cType").value;
+    const Price = document.getElementById("price").value;
+    const Descp = document.getElementById("desc").value;
+    console.log(Cname,Ctype,Price,Descp);
+    const data=localStorage.getItem('course');
+
+    // console.log(data);
+    const response = await fetch("127.0.0.1:8001/updatecourse",{
+        method:"PUT",
+        credentials:"include",
+        headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    courseName : Cname,
+                    CourseType : Ctype,
+                    price : Price,
+                    description: Descp
+                })
+    })
+    console.log(response.status);
+    
+    
+}
+
+
+</script> -->
+
+
+<script>
+    window.onload = async () => {
+        const name = localStorage.getItem('course');
+        console.log(name);
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8001/getcourse?courseName=${name}`);
+            if (response.status === 404) {
+                window.location.href = '/notfound.html';
+                return;
+            }
+
+            const data = await response.json();
+            document.getElementById("cname").value = data.courseName;
+            document.getElementById("cType").value = data.CourseType;
+            document.getElementById("price").value = data.price;
+            document.getElementById("desc").innerHTML = data.description;
+
+        } catch (error) {
+            console.error("Error fetching course data:", error);
+        }
+    }
+
+    async function updateCourse(event) {
+        event.preventDefault();
+        const Cname = document.getElementById("cname").value;
+        const Ctype = document.getElementById("cType").value;
+        const Price = document.getElementById("price").value;
+        const Descp = document.getElementById("desc").value;
+
+        try {
+            const response = await fetch("http://127.0.0.1:8001/updatecourse", {
+                method: "PUT",
+                credentials: "include",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    courseName: Cname,
+                    CourseType: Ctype,
+                    price: Price,
+                    description: Descp
+                })
+            });
+
+            console.log("Response Status:", response.status);
+            if (response.ok) {
+                console.log("Course updated successfully");
+            } else {
+                console.log("Failed to update course");
+            }
+        } catch (error) {
+            console.error("Error updating course:", error);
+        }
+    }
+</script>
+
+
+<body class="bg-purple-100">
+    <div class="bg-purple-100 h-16 w-full shadow-xl">
+        <div class="float-left  w-12 ">
+            <img src="/HTML/kba_logo.webp">
+        </div>
+        <div>
+            <nav>
+                <ul class="flex flex-row justify-end space-x-20 p-4 ">
+                    <li><a href="/Frontend/homepage.html" class=" font-sans font-bold text-purple-950">HOME</a></li>
+                    <li><a href="/Frontend/viewcourse.html" class=" text-purple-950 font-sans font-bold">COURSES</a></li>
+
+                    <li><a href="/Frontend/addCourse.html" class=" text-purple-950 font-sans font-bold">ADD COURSE</a></li>
+                    <li><a href="/Frontend/contact.html" class=" text-purple-950 font-sans font-bold">CONTACT US</a></li>
+                    <li><a href="/Frontend/login.html" class=" text-purple-950 font-sans font-bold">LOGOUT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="bg-purple-100 shadow-indigo-700 rounded-lg shadow-lg p-10 mt-5 w-3/12 justify-center m-auto">
+        <h2 class="text-purple-950 text-3xl text-center">Update Courses</h2>
+        <div class="m-auto p-4 mt-4">
+            <form>
+                <div>
+                    <label class="mt-4 text-purple-950 text-l ">Course Name:</label><br>
+                    <input type="text" placeholder="eg.Blockchain" class="mt-4 w-80 h-10 mb-2" required id="cname">
+                </div>
+                <div>
+                     <label class="mt-4 text-purple-950 text-l" >Course Type: </label><br>
+                     <select class="mt-4 mb-2 w-80 h-10 bg-slate-50" required id="cType">
+                        <option value="Self-Paced">Hybrid</option>
+                        <option value="hybrid">Self-Paced</option>
+                        <option value="part-time">Part-Time</option>
+                        <option value="Full-time">Full-Time</option>
+                    </select>
+                     </div>
+                     <div>
+                        <label class="mt-4 text-purple-950 text-l">Description</label><br>
+        <textarea placeholder="small description on the Course" required class="w-80 h-16 mt-4" id="desc"></textarea><br>
+                     </div>
+                     <div>
+                        <label class="mt-4 text-purple-950 text-l">Price</label><br>
+        <select class="mt-4 mb-2 w-80 h-10 bg-slate-50" required id="price">
+            <option value="Rs5000">Rs.5000</option>
+            <option value="Rs6000">Rs.6000</option>
+            <option value="Rs15000">Rs.15000</option>
+            <option value="Rs20000">Rs.20000</option>
+        </select><br><br>
+                     </div>
+                     <div class="text-center">
+                        
+                        <a href="#"><button type="submit" class="mt-4 bg-purple-500 rounded-full text-white w-full h-10 curser-pointer" onclick="updateCourse(event)">Update Course</button></a>
+
+                     </div>
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+<footer>
+    <p class="bg-purple-200 h-12 text-center  pt-2 text-purple-400 mt-96">&copy; This page All rights reserved</p>
+</footer>
+
+</html>

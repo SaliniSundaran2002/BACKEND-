@@ -5,29 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Image transition effects */
+        .image-container {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script>
+        window.onload = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8080/viewuser", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: { 'Content-Type': 'application/json' }
+                });
+    
+                if (!response.ok) {
+                    console.log(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                console.log(data);
+    
+                if (data.user === 'admin') {
+                    document.getElementById("admin").style.display = 'block';
+                    document.getElementById("admin-mobile").style.display = 'block';
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
 </head>
-<body class="bg-cover" style="background-image: url(/HTML/LibraryManagement/Images/pexels-enginakyurt-2943603.jpg)">
-    <div class="flex p-4 bg-purple-100">
-        <div class="text-black">
-        <h1 class="text-3xl font-mono px-2 font-bold"><span class="text-blue-500 "> LIBRARY </span>MANAGEMENT SYSTEM</h1>
+<body class="bg-gray-100 bg-cover" style="background-image: url('/images/pexels-technobulka-2908984.jpg')">
+
+    <!-- Navbar -->
+    <nav class="top-0 z-50 ">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 mx-0">
+                <img src="/images/Black_Grey_Minimalist_Book_Club_Logo__1_-removebg-preview.png" alt="logo"
+                    class="w-20 h-20">
+                <h1 class="text-white text-2xl font-bold">BOOK NEST</h1>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="block lg:hidden">
+                <button id="mobile-menu-toggle" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Desktop menu -->
+            <div class="hidden lg:flex space-x-6 font-bold text-md">
+                <a href="home.html" class="text-white hover:text-blue-200 transition duration-300">Home</a>
+                <a href="about.html" class="text-white hover:text-blue-200 transition duration-300">About</a>
+                <a href="addbook.html" class="text-white hover:text-blue-200 transition duration-300" id="admin" style="display: none;">Add Book</a>
+                <a href="viewbook.html" class="text-white hover:text-blue-200 transition duration-300">View Book</a>
+                <a href="contact.html" class="text-white hover:text-blue-200 transition duration-300">Contact</a>
+               
+                <a href="#" class="text-white hover:text-blue-200 transition duration-300" id="logout-btn">Logout</a>
+            </div>
         </div>
-        <div class="flex float-right ml-96 text-md text-black font-bold">
-  
-            <a href="home.html" class="ml-80 hover:text-blue-500">Home</a>
-            <a href="about.html" class="ml-6 hover:text-blue-500">About</a>
-        <a href="addbook.html" class="ml-6 hover:text-blue-500">Add Book</a>
-            <a href="viewbook.html" class="ml-6 hover:text-blue-500"> View Book</a>
-            <a href="contact.html" class="ml-6 hover:text-blue-500">Contact</a>
-           <a href="login.html" class="ml-6 hover:text-blue-500">Login</a>
-     
-        </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden inset-0 transform -translate-x-full transition-transform duration-300 mt-2 flex">
+
+        <a href="home.html" class="block p-2 text-white  font-semibold">Home</a>
+        <a href="about.html" class="block p-2 text-white  font-semibold">About</a>
+        <a href="addbook.html" class="block p-2 text-white  font-semibold hidden" id="admin-mobile" style="display: none;">Add Book</a>
+        <a href="viewbook.html" class="block p-2 text-white  font-semibold">View Book</a>
+        <a href="contact.html" class="block p-2 text-white  font-semibold">Contact</a>
+        <a href="#" class="block p-2 text-white font-semibold" id="logout-btn">Logout</a>
     </div>
 
+    <div class="m-auto text-2xl font-bold font-sans w-5/12 h-fit rounded-lg py-2 mt-32 justify-between bg-slate-100 bg-opacity-70">
+        <h2 class="text-center mt-16 text-slate-700">AB<span class="text-slate-900">OUT</span></h2>
 
-    <div class="m-auto text-2xl font-bold font-sans bg-purple-100 w-5/12 h-fit rounded-lg py-2 mt-32 justify-between ">
-        <h2 class="text-center mt-16">AB<span class="text-blue-500">OUT</span></h2>
-
-        <p class="font-thin text-lg text-center mt-4 px-4 mb-6">
+        <p class="font-thin text-lg text-center mt-4 px-4 mb-6 text-black">
 
             വാളിനേക്കാൾ മൂർച്ചയാണ് വാക്കുകൾക്ക്, അതുകൊണ്ടു തന്നെ വാക്കുകൾ ഇഴ ചേർത്തുവെച്ച പുസ്തകങ്ങളുടെ വായനയാണ് മനുഷ്യന്റെ മാനസിക വളർച്ചയ്ക്ക് ഏറ്റവും അനിവാര്യം. ഒരു നല്ല പുസ്തകം ഒരു മികച്ച സുഹൃത്തിന്‌ തുല്യമാണ്. ലോകം എത്ര മാറിയാലും വായനയുടെ പ്രാധാന്യം കുറയുന്നില്ല, ഓരോ കാലത്തെയും സാഹസാഹര്യങ്ങൾക്കനുസരിച്ച് വായനയുടെ രീതികൾ മാറിയേക്കാം, തൊട്ടടുത്ത ലൈബ്രറിയായിരുന്നു പഴയ തലമുറയിലെ ആളുകളുടെ വായനാ വേദി. അവിടെയുള്ള പല തരത്തിലുള്ള പുസ്തകങ്ങൾ വായിച്ചും അറിവ് പങ്കിട്ടുമാണ് മുൻ തലമുറ വായനയുടെ വിശാല ലോകത്തേയ്ക്ക് നടന്നുകയറിയിരുന്നത്. എന്നാൽ കാലം മാറിയപ്പോൾ ലൈബ്രറിയുടെ പ്രാധാന്യം താരതമ്യേന കുറയുകയും വായനയുടെ രീതിയിൽ ചില വ്യത്യാസങ്ങൾ സംഭവിക്കുകയും ചെയ്തു.</p>
         </div>
@@ -36,14 +101,47 @@
         
         </div>
     </div>
+            <!-- Footer -->
+            <footer class="bg-slate-800 py-2 mt-[161px]">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+                    <p class="text-white text-center">© 2024 Book Nest. All rights reserved.</p>
+                </div>
+            </footer>
+
+            <script>
+
+            // Toggle mobile menu
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+    
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('translate-x-0');
+                mobileMenu.classList.toggle('-translate-x-full');
+            });
+
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+            
+                    // Send a request to the server to handle the logout
+                    fetch('/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin', // Include cookies with the request
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to login page or home page
+                            window.location.href = '/login.html';
+                        } else {
+                            alert('Logout failed!');
+                        }
+                    })
+                    .catch(error => console.error('Error logging out:', error));
+                });
+            </script>
 </body>
 </html>
 
-        </div>
-        
-
-        
-        </div>
-    </div>
-</body>
-</html>

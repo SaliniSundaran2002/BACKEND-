@@ -6,173 +6,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Book</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.onload = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8080/viewuser", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: { 'Content-Type': 'application/json' }
+                });
+    
+                if (!response.ok) {
+                    console.log(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                console.log(data);
+    
+                if (data.user === 'admin') {
+                    document.getElementById("admin").style.display = 'block';
+                    document.getElementById("admin-mobile").style.display = 'block';
+                }
+                
+                // Fetch user role from the /viewuser route
+                const userResponse = await fetch("http://127.0.0.1:8080/viewuser", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (!userResponse.ok) {
+                    alert("Failed to fetch user role");
+                    return;
+                }
+
+                const userData = await userResponse.json();
+                const userRole = userData.user; // Assuming the response structure is { user: "admin" }
+
+                // Fetch books data
+                const booksResponse = await fetch("http://127.0.0.1:8080/viewBooks", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                // console.log("Book response: ",booksResponse.status);
+
+                if (booksResponse.status != 200) {
+                    alert("Failed to fetch books");
+                    return;
+                }
+
+                const booksData = await booksResponse.json();
+                console.log("bookData: ", booksData);
+
+                const books = booksData.books;
+                const booksContainer = document.getElementById("books-container");
+                booksContainer.innerHTML = '';
+
+                //  Render books and conditionally show delete button for admins
+                books.forEach(book => {
+                    const bookElement = document.createElement("div");
+                    bookElement.classList.add('bg-purple-100', 'rounded-lg', 'p-4', 'shadow-lg', 'flex', 'flex-col', 'items-center');
+                    bookElement.innerHTML = `
+                <h3 class="text-xl font-bold mb-2 text-center">${book.Bookname}</h3>
+                <!-- Assuming your backend is running on http://localhost:3000 -->
+<img src="http://localhost:8080/${book.CoverImage}" alt="${book.Bookname} Cover Image">
+
+                <p class="text-gray-700 text-center mt-4">${book.AuthorName}</p>
+                <p class="text-gray-700 text-center">${book.BookType}</p>
+                <p class="text-gray-400 text-center">RS. ${book.Price}</p>
+                
+            `;
+
+                    // Conditionally add delete button if the user is an admin
+                    if (userRole === 'admin') {
+                        const deleteButton = document.createElement("button");
+                        deleteButton.classList.add('bg-red-500', 'w-24', 'h-10', 'rounded-lg', 'text-white', 'mt-2');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = () => deleteBook(book.Bookname);
+                        bookElement.appendChild(deleteButton);
+                    }
+
+                    booksContainer.appendChild(bookElement);
+                });
+            } catch (error) {
+                console.error("Error fetching books or user role:", error);
+            }
+        };
+
+        // Function to delete a book
+        async function deleteBook(bookname) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8080/deleteBook/${bookname}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                if (response.status !== 200) {
+                    alert("Failed to delete book");
+                    return;
+                }
+
+                alert("Book deleted successfully");
+                window.location.reload();
+            } catch (error) {
+                console.error("Error deleting book:", error);
+            }
+        }
+
+    </script>
 </head>
 
-<body class="bg-cover" style="background-image: url(/HTML/LibraryManagement/Images/pexels-pixabay-256541.jpg)">
-    <div class="flex p-4 bg-purple-100">
-        <div class="text-black">
-            <h1 class="text-3xl font-mono px-2 font-bold"><span class="text-blue-500 "> LIBRARY </span>MANAGEMENT SYSTEM
-            </h1>
-        </div>
-        <div class="flex float-right ml-96 text-md text-black font-bold">
+<body class="bg-gray-100 bg-cover" style="background-image: url('/images/pexels-pixabay-207662.jpg')">
 
-            <a href="home.html" class="ml-80 hover:text-blue-500">Home</a>
-            <a href="about.html" class="ml-6 hover:text-blue-500">About</a>
-            <a href="addbook.html" class="ml-6 hover:text-blue-500">Add Book</a>
-            <a href="viewbook.html" class="ml-6 hover:text-blue-500"> View Book</a>
-            <a href="contact.html" class="ml-6 hover:text-blue-500">Contact</a>
-            <a href="login.html" class="ml-6 hover:text-blue-500">Login</a>
+    <!-- Navbar -->
+    <nav class="top-0 z-50 ">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 mx-0">
+                <img src="/images/Black_Grey_Minimalist_Book_Club_Logo__1_-removebg-preview.png" alt="logo"
+                    class="w-20 h-20">
+                <h1 class="text-white text-2xl font-bold">BOOK NEST</h1>
+            </div>
 
+            <!-- Mobile menu button -->
+            <div class="block lg:hidden">
+                <button id="mobile-menu-toggle" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Desktop menu -->
+            <div class="hidden lg:flex space-x-6 font-bold text-md">
+                <a href="home.html" class="text-white hover:text-blue-200 transition duration-300">Home</a>
+                <a href="about.html" class="text-white hover:text-blue-200 transition duration-300">About</a>
+                <a href="addbook.html" class="text-white hover:text-blue-200 transition duration-300" id="admin" style="display: none;">Add Book</a>
+                <a href="viewbook.html" class="text-white hover:text-blue-200 transition duration-300">View Book</a>
+                <a href="contact.html" class="text-white hover:text-blue-200 transition duration-300">Contact</a>
+               
+                <a href="#" class="text-white hover:text-blue-200 transition duration-300" id="logout-btn">Logout</a>
+            </div>
         </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden inset-0 transform -translate-x-full transition-transform duration-300 mt-2 flex">
+
+        <a href="home.html" class="block p-2 text-white  font-semibold">Home</a>
+        <a href="about.html" class="block p-2 text-white  font-semibold">About</a>
+        <a href="addbook.html" class="block p-2 text-white  font-semibold hidden" id="admin-mobile" style="display: none;">Add Book</a>
+        <a href="viewbook.html" class="block p-2 text-white  font-semibold">View Book</a>
+        <a href="contact.html" class="block p-2 text-white  font-semibold">Contact</a>
+        <a href="#" class="block p-2 text-white font-semibold" id="logout-btn">Logout</a>
     </div>
 
-
-    <h2 class="text-center mt-16 font-bold font-sans text-2xl">VIEW<span class="text-blue-500">BOOKS</span></h2>
-
-    <div class="grid grid-cols-4 gap-16 md:grid grid-cols-2">
-    
-
-        <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-32 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Ram C/O Anandhi</h3>
-                <img src="/HTML/LibraryManagement/Images/ramc-oanandhi.jpg" class="rounded-lg">
-                <p class="mt-2">Akhil P Dharmajan</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-32 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-l font-bold mb-2">Ettavum Priyapetta Ennodu</h3>
-                <img src="/HTML/LibraryManagement/Images/ettavumpriyapettaennodu.jpeg" class="rounded-lg">
-                <p class="mt-2">Nimna Vijay</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-
-
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-32 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Orikkal</h3>
-                <img src="/HTML/LibraryManagement/Images/orikkal.jpg" class="rounded-lg">
-                <p>N. Mohanan</p>
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-
-                
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-32 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Kaali</h3>
-                <img src="/HTML/LibraryManagement/Images/kaali.jpeg" class="rounded-lg">
-                <p class="mt-2">Aswathy Sreekanth</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Qabar</h3>
-                <img src="/HTML/LibraryManagement/Images/qabar.jpg" class="rounded-lg">
-                <p class="mt-2">K. R. Meera</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Ouija</h3>
-                <img src="/HTML/LibraryManagement/Images/ouijoboard.jpg" class="rounded-lg">
-                <p class="mt-2">Akhil P Dharmajan</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Aadujeevitham</h3>
-                <img src="Images/aadujeevitham.jpeg" class="rounded-lg">
-                <p class="mt-2">Benyamin</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Ente Kadha</h3>
-                <img src="Images/ente-katha.jpg" class="rounded-lg">
-                <p class="mt-2">Madhavikutty</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">kalkki</h3>
-                <img src="Images/kalkki.jpeg" class="rounded-lg">
-                <p class="mt-2">Ponniyin Selvan</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Premanagharam</h3>
-                <img src="/HTML/LibraryManagement/Images/premanagharam.jpg" class="rounded-lg">
-                <p class="mt-2">Bineesh Puthupanam</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Ponam</h3>
-                <img src="Images/ponam.jpg" class="rounded-lg">
-                <p class="mt-2">K. N. Prashanth</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            <div class="py-4 px-14 m-auto w-fit h-fit rounded-lg py-2 mt-4 justify-between bg-purple-100 ml-6 mb-20">
-                <!-- <h3>ADD BOOK</h3> -->
-                <h3 class="text-xl font-bold mb-2">Aarachar</h3>
-                <img src="/HTML/LibraryManagement/Images/arachar.jpeg" class="rounded-lg">
-                <p class="mt-2">K. R. Meera</p>
-
-                <p class="text-gray-400">RS.199</p>
-                <a href="#"><button type="submit" class="bg-blue-500 w-24 h-10 rounded-lg text-white mt-2 ml-20 mb-2">View</button></a>
-                
-            </div>
-            
-            
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-center mt-8 font-bold font-sans text-2xl text-slate-500">VIEW <span class="text-slate-200">BOOKS</span></h2>
+        <div id="books-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-8">
+            <!-- Book items will be dynamically inserted here -->
         </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-slate-800 py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+            <p class="text-white text-center">© 2024 Book Nest. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <script>
+        // Toggle mobile menu
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
 
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('translate-x-0');
+            mobileMenu.classList.toggle('-translate-x-full');
+        });
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
 
-
-    </div>
-    </div>
-</body>
-
-</html>
-
-</div>
-
-
-
-</div>
-</div>
+        // Send a request to the server to handle the logout
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin', // Include cookies with the request
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to login page or home page
+                window.location.href = '/login.html';
+            } else {
+                alert('Logout failed!');
+            }
+        })
+        .catch(error => console.error('Error logging out:', error));
+    });
+    </script>
 </body>
 
 </html>

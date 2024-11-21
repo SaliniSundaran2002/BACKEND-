@@ -1,67 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Book</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        async function addBook(event) {
+            event.preventDefault();  // Prevent form from submitting the default way
+
+            // Get the values of the form fields
+            const bname = document.getElementById("bookname").value
+            const bauthor = document.getElementById("authorname").value
+            const type = document.getElementById("type").value
+            const price = document.getElementById("price").value
+            const cimage = document.getElementById("book-image").files[0];  // Get the selected file
+
+            // Create a new FormData object to send form data including the image
+            const formData = new FormData();
+            formData.append('booknames', bname);
+            formData.append('authornames', bauthor);
+            formData.append('prices', price);
+            formData.append('booktypes', type);
+            formData.append('coverimage', cimage);  // Add the image file
+
+            try {
+                // Make the POST request to your backend
+                const response = await fetch("http://127.0.0.1:8080/addBooks", {
+                    method: "POST",
+                    credentials: "include",  // Include cookies (if needed for authentication)
+                    body: formData  // Send the FormData
+                });
+
+                if (response.status == 200) {
+                    alert("Successfully book added");
+                } else if (response.status == 400) {
+                    alert("This book already exists");
+                } else {
+                    alert("An error occurred");
+                }
+            } catch (err) {
+                console.log(err);
+                alert("Error occurred while uploading the book");
+            }
+        }
+    </script>
 </head>
-<body class="bg-cover" style="background-image: url(/HTML/LibraryManagement/Images/pexels-element5-1370295.jpg)">
-    <div class="flex p-4 p-4 bg-purple-100">
-        <div class="text-black">
-        <h1 class="text-3xl font-mono px-2 font-bold"><span class="text-blue-500 "> LIBRARY </span>MANAGEMENT SYSTEM</h1>
-        </div>
-        <div class="flex float-right ml-96 text-md text-black font-bold">
-  
-            <a href="home.html" class="ml-80 hover:text-blue-500">Home</a>
-            <a href="about.html" class="ml-6 hover:text-blue-500">About</a>
-        <a href="addbook.html" class="ml-6 hover:text-blue-500">Add Book</a>
-            <a href="viewbook.html" class="ml-6 hover:text-blue-500"> View Book</a>
-            <a href="contact.html" class="ml-6 hover:text-blue-500">Contact</a>
-           <a href="login.html" class="ml-6 hover:text-blue-500">Login</a>
-     
-        </div>
-    </div>
 
+<body class="bg-gray-100 bg-cover" style="background-image: url('/images/pexels-technobulka-2908984.jpg')">
 
-    <div class="m-auto  bg-purple-100 w-5/12 h-fit rounded-lg py-2 mt-32 justify-between ">
-        <h2 class="text-center mt-16 font-bold font-sans text-2xl">ADD<span class="text-blue-500">BOOK</span></h2>
+    <!-- Navbar -->
+    <nav class="top-0 z-50 ">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 mx-0">
+                <img src="/images/Black_Grey_Minimalist_Book_Club_Logo__1_-removebg-preview.png" alt="logo"
+                    class="w-20 h-20">
+                <h1 class="text-white text-2xl font-bold">BOOK NEST</h1>
+            </div>
 
-        <div class="py-4 px-14 m-auto">
-                <!-- <h3>ADD BOOK</h3> -->
-                <input type="text" placeholder="Book Name" class="w-11/12 h-12 rounded-lg mt-4 px-2"><br>
-                <input type="text" placeholder="Author" class="w-11/12  h-12 rounded-lg mt-4 px-2"><br>
-                
-                <select class="w-11/12  h-12 rounded-lg mt-4 bg-white px-2">
-                    <option value="select">Type</option>
-                    <option value="Novel">Novel</option>
-                    <option value="Horror">Horror</option>
-                    <option value="Memmories">Memories</option>
-                    <option value="Thriller">Thriller</option>
-                </select><br>
-                <input type="text" placeholder="Price$" class="w-11/12 h-12 rounded-lg mt-4 px-2"><br>
-                <label for="">Image</label>
-                <input type="file" placeholder="Choose image" title="Choose image" class="w-11/12 h-12 rounded-lg mt-4 px-2"><br>
-                <label for="">File</label>
-                <input type="file" placeholder="Choose document" title="Choose file" class="w-11/12 h-12 rounded-lg mt-4 px-2"><br>
+            <!-- Mobile menu button -->
+            <div class="block lg:hidden">
+                <button id="mobile-menu-toggle" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
 
-                <button class="bg-blue-500 mt-6 rounded-lg w-24 h-10 text-white ml-60">SUBMIT</button>
-                
+            <!-- Desktop menu -->
+            <div class="hidden lg:flex space-x-6 font-bold text-md">
+                <a href="home.html" class="text-white hover:text-blue-200 transition duration-300">Home</a>
+                <a href="about.html" class="text-white hover:text-blue-200 transition duration-300">About</a>
+                <a href="addbook.html" class="text-white hover:text-blue-200 transition duration-300" id="admin">Add
+                    Book</a>
+                <a href="viewbook.html" class="text-white hover:text-blue-200 transition duration-300">View Book</a>
+                <a href="contact.html" class="text-white hover:text-blue-200 transition duration-300">Contact</a>
+
+                <a href="#" class="text-white hover:text-blue-200 transition duration-300" id="logout-btn">Logout</a>
             </div>
         </div>
-        
+    </nav>
 
-        
-        </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu"
+        class="lg:hidden inset-0 transform -translate-x-full transition-transform duration-300 mt-2 flex">
+
+        <a href="home.html" class="block p-2 text-white  font-semibold">Home</a>
+        <a href="about.html" class="block p-2 text-white  font-semibold">About</a>
+        <a href="addbook.html" class="block p-2 text-white  font-semibold hidden" id="admin-mobile">Add Book</a>
+        <a href="viewbook.html" class="block p-2 text-white  font-semibold">View Book</a>
+        <a href="contact.html" class="block p-2 text-white  font-semibold">Contact</a>
+        <a href="#" class="block p-2 text-white font-semibold" id="logout-btn">Login</a>
     </div>
-</body>
-</html>
 
-        </div>
-        
+    <div class="m-auto bg-slate-100 bg-opacity-70 w-full md:w-5/12 lg:w-1/3 h-fit rounded-lg py-8 mt-16">
+        <h2 class="text-center font-bold text-2xl mb-8 text-slate-800">ADD <span class="text-slate-900">BOOK</span></h2>
 
-        
-        </div>
+        <form class="px-4" onsubmit="addBook(event)" enctype="multipart/form-data">
+
+
+            <div class="p-4">
+                <label for="bookname" class="block text-lg font-semibold">Book Name</label>
+                <input type="text" placeholder="Book Name" class="w-full h-12 rounded-lg mt-2 px-2" id="bookname">
+
+                <label for="authorname" class="block text-lg font-semibold mt-4">Author Name</label>
+                <input type="text" placeholder="Author Name" class="w-full h-12 rounded-lg mt-2 px-2" id="authorname">
+
+                <label for="type" class="block text-lg font-semibold mt-4">Type</label>
+                <select class="w-full h-12 rounded-lg mt-2 bg-white px-2" id="type">
+                    <option value="select">Select Type</option>
+                    <option value="Novel">Novel</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Memories">Memories</option>
+                    <option value="Thriller">Thriller</option>
+                </select>
+
+                <label for="price" class="block text-lg font-semibold mt-4">Price</label>
+                <input type="text" placeholder="Price" class="w-full h-12 rounded-lg mt-2 px-2" id="price">
+
+                <label for="book-image" class="block text-lg font-semibold mt-4">Image</label>
+                <input type="file" id="book-image" title="Choose image" class="w-full h-12 rounded-lg mt-2 px-2">
+
+                <button class="bg-slate-700 hover:bg-slate-800 mt-6 rounded-lg w-24 h-10 text-white mx-auto block">Submit</button>
+            </div>
+
+
+            <!-- <input type="text" placeholder="Book Name" class="w-full h-12 rounded-lg mt-4 px-2" id="bookname">
+            <input type="text" placeholder="Author Name" class="w-full h-12 rounded-lg mt-4 px-2" id="authorname">
+
+            <select class="w-full h-12 rounded-lg mt-4 bg-white px-2" id="type">
+                <option value="select">Type</option>
+                <option value="Novel">Novel</option>
+                <option value="Horror">Horror</option>
+                <option value="Memories">Memories</option>
+                <option value="Thriller">Thriller</option>
+            </select>
+
+            <input type="text" placeholder="Price" class="w-full h-12 rounded-lg mt-4 px-2" id="price">
+
+            <label for="book-image" class="mt-4">Image</label>
+            <input type="file" id="book-image" title="Choose image" class="w-full h-12 rounded-lg mt-4 px-2">
+
+            <button class="bg-blue-500 mt-6 rounded-lg w-24 h-10 text-white mx-auto block">SUBMIT</button> -->
+        </form>
     </div>
+    <!-- Footer -->
+    <footer class="bg-slate-800 py-2 mt-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+            <p class="text-white text-center">© 2024 Book Nest. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('translate-x-0');
+            mobileMenu.classList.toggle('-translate-x-full');
+        });
+        document.getElementById('logout-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Send a request to the server to handle the logout
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin', // Include cookies with the request
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to login page or home page
+                        window.location.href = '/login.html';
+                    } else {
+                        alert('Logout failed!');
+                    }
+                })
+                .catch(error => console.error('Error logging out:', error));
+        });
+    </script>
 </body>
+
 </html>
