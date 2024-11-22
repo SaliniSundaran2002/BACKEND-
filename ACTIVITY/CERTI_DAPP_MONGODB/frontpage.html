@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Optional external CSS file can be linked here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home</title>
+    <script>
+
+        window.onload = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8005/viewuser", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                console.log(response);
+
+                const data = await response.json()
+                console.log(data);
+
+                if (data.user == 'admin') {
+                    document.getElementById("issuecerti").style.display = 'block'
+                }
+            } catch (err) {
+                console.log(err);
+
+            }
+        }
+
+        async function certiSearch() {
+            try {
+                const cid = document.getElementById("certiid").value;
+
+                const response = await fetch(`http://127.0.0.1:8005/getcourse/${cid}`, {
+                    method: 'GET',
+                    credentials: "include",
+                });
+
+                console.log("response", response.status);
+
+                if (response.status == 200) {
+                    const data = await response.json();
+                 
+                   window.location.href = `/BACKEND/ACTIVITY/CERTI_DAPP_MONGODB/viewcertificate.html?id=${cid}`;
+                    
+                } else{
+                    alert("No certificate found");
+                }
+                
+
+                
+            
+                
+
+            } catch (error) {
+                console.error("An error occurred:", error);
+                alert("An error occurred while fetching the certificate.");
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="p-4 text-right flex items-center justify-end space-x-4">
+        <a href="frontpage.html" class="text-gray-800 px-4 py-2 rounded hover:bg-sky-500 hover:text-white">Home</a>
+        <a href="issuecertificate.html"
+            class="text-gray-800 px-4 py-2 rounded hover:bg-sky-500 hover:text-white transition-all" id="issuecerti"
+            style="display: none;">Issue Certificate</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex flex-col items-center mt-16 text-center px-4">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Certificate Dapp</h2>
+
+        <!-- Image Section -->
+        <img src="icon.png" alt="Certificate Dapp Icon" class="w-64 sm:w-80 mb-8 mx-auto">
+
+        <!-- Search Section -->
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <input type="text" placeholder="Enter Certificate ID to View" id="certiid" required
+                class="border-2 border-sky-500 h-10 px-4 rounded-md w-full sm:w-64">
+            <button type="submit"
+                class="bg-cyan-500 text-white px-4 py-2 rounded-md hover:bg-cyan-600 transition-all w-full sm:w-auto"
+                onclick="certiSearch()">Search</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

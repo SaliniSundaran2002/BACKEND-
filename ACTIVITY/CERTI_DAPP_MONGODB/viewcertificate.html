@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Certificate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.onload = async () => {
+            // Extract the certificate ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const certificateId = urlParams.get('id'); // Get 'id' from URL
+
+            if (certificateId) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8005/getcourse/${certificateId}`, {
+                        method: 'GET',
+                        credentials: "include",
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data.data);
+                        const certi = data.data
+
+
+                        // Extract and display certificate data
+                        let sname = certi.Selectedcourse;
+                        let cname = certi.Candidatename;
+                        let sgrade = certi.Grade;
+                        let isdate = certi.Issuedate;
+                        const dateOnly = new Date(isdate).toISOString().split('T')[0];
+
+                        document.getElementById('candidateName').textContent = cname || 'N/A';
+                        document.getElementById('selectedCourse').textContent = sname || 'N/A';
+                        document.getElementById('selectGrade').textContent = sgrade || 'N/A';
+                        document.getElementById('issueDate').textContent = dateOnly || 'N/A';
+                    } else {
+                        alert("Certificate not found");
+                    }
+                } catch (error) {
+                    console.error("Error fetching certificate:", error);
+                    alert("An error occurred while retrieving the certificate data.");
+                }
+            }
+        };
+
+    </script>
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="p-4 text-right flex items-center justify-end space-x-4">
+        <a href="frontpage.html" class="px-4 py-2 rounded bg-sky-500 text-white hover:text-black hover:bg-white">Home</a>
+    </nav>
+
+    <div class="mt-16 border border-black w-full max-w-md h-auto bg-white shadow-lg rounded-lg m-auto">
+        <div class="mt-10 border border-gray-300 w-3/4 m-auto p-8 rounded-lg mb-10">
+            <h3 class="text-center text-2xl font-semibold text-gray-700">Kerala Blockchain Academy</h3>
+            <div class="mt-10">
+                <img src="icon.png" alt="Kerala Blockchain Academy Logo" class="m-auto w-64 sm:w-80">
+            </div>
+            <div class="text-center mt-8 text-gray-700 leading-relaxed">
+                <p>
+                    This is to certify that <b class="text-black" id="candidateName"></b><br>
+                    has successfully completed <b class="text-black" id="selectedCourse">Blockchain Foundation</b><br>
+                    with <b class="text-black" id="selectGrade">S</b> on <b class="text-black"
+                        id="issueDate">2024-08-07</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

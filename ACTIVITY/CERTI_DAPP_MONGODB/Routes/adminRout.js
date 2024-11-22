@@ -101,7 +101,7 @@ const certificateSchema = mongoose.Schema({
     Candidatename:String,
     Selectedcourse:String,
     Grade:String,
-    Issuuedate:Date
+    Issuedate:Date
 })
 // const certificate = new Map()
 const certificate = mongoose.model("Addcertificate ",certificateSchema)
@@ -138,54 +138,64 @@ adminRoute.post('/issuecertificate',authenticate, (req, res) => {
     
 })
 
+adminRoute.get('/getcourse/:id', async (req, res) => {
+    try {
+        const search = req.params.id;
+        console.log("Search ID:", search);
 
-adminRoute.get('/getcourse/:id',(req,res)=>{
-const searchTerm = req.params.id 
-const result=[]
-    try{
-if(searchTerm){
-    for(const[id,item] of certificate){
-        if(id==searchTerm|| item.selectedCourse.includes(searchTerm) || item.candidateName.includes(searchTerm) || item.selectGrade.includes(searchTerm) || item.issueDate.includes(searchTerm))
-        {
-            result.push({id, ...item})
-            console.log("Certificate Detailes : ",result);
-            res.status(200).json({ message: "Search term found" })
+        const data = await certificate.findOne({Certiid:search})
+        if(data){
+            console.log(data);
+            return res.status(200).json({data})
             
-        } else{
-            console.log("No search term found");
-    res.status(400).json({ message: "No search term found" })
-        }
-    }
-}
+        } 
 
+        return res.status(404).json({message:"Not found"})
+        
+    } catch (error) {
+        return res.status(500).json({ message: "Check the input", error: error.message });
+    }
+});
+
+
+
+// get all certificates
+
+adminRoute.get('/ViewCertificates', async (req,res)=>{
+    try{
+        const allCertificates = await certificate.find()
+        if(allCertificates){
+            return res.status(200).json({allCertificates})
+        } 
+        return res.status(404).json({message:"Certificates not available"})
     } catch(error){
-        res.status(400).json({message:"Error"})
+        return res.status(500).json({error})
     }
-
 })
 
 
 
 
-adminRoute.get('/getcourse',(req,res)=>{
-    try{
-   const search= req.query.certiId; 
-   console.log(search);
-   
-   console.log(search);
-        const result = course.get(search)
-        if (result) {
 
-            res.send(result);
-        }
-        else {
-            res.status(404).json({ message: "No course found,Check the name" })
-        }
-    }
-    catch (error) {
-        res.status(400).json({ message: "Check the input" })
-    }
- })
+// adminRoute.get('/getcourse',(req,res)=>{
+//     try{
+//    const search= req.query.certiId; 
+//    console.log(search);
+   
+//    console.log(search);
+//         const result = course.get(search)
+//         if (result) {
+
+//             res.send(result);
+//         }
+//         else {
+//             res.status(404).json({ message: "No course found,Check the name" })
+//         }
+//     }
+//     catch (error) {
+//         res.status(400).json({ message: "Check the input" })
+//     }
+//  })
 
 
 

@@ -13,7 +13,7 @@
             const lname = document.getElementById("lastname").value;const uname = document.getElementById("username").value;const role = document.getElementById("role").value;
             const pass = document.getElementById("password").value;
             // console.log(fname);
-            const response = await fetch('http://127.0.0.1:8000/signup',{
+            const response = await fetch('http://127.0.0.1:8005/signup',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
@@ -30,10 +30,11 @@
             console.log(response.status);
             if(response.status == 200){
                 alert("user added successfully")
-                window.location.href = '/login.html'
+                // window.location.href = '/CERTI_DAPP_MONGODB/login.html'
+                window.location.href = location.origin + '/BACKEND/ACTIVITY/CERTI_DAPP_MONGODB/login.html';
             } else if(response.status == 400){
                 alert("Already registered")
-                window.location.href = '/login.html'
+                window.location.href = '/BACKEND/ACTIVITY/CERTI_DAPP_MONGODB/login.html'
             } else{
                 alert("Something error")
             }

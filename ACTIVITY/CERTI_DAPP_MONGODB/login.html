@@ -15,7 +15,7 @@
             // console.log(uname, pass);
 
 
-            const response = await fetch("http://127.0.0.1:8000/login", {
+            const response = await fetch("http://127.0.0.1:8005/login", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,7 +30,7 @@
 
             if (response.status == 200) {
                 alert("Successfully logged in")
-                window.location.href = '/frontpage.html'
+                window.location.href = '/BACKEND/ACTIVITY/CERTI_DAPP_MONGODB/frontpage.html'
             } else {
                 alert("Invalid username or password")
             }

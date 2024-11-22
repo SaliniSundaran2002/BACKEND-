@@ -18,7 +18,7 @@
             const isdate = document.getElementById("issuedate").value
             console.log(scourse, certid, grade, isdate);
 
-            const response = await fetch(`http://127.0.0.1:8000/issuecertificate`, {
+            const response = await fetch(`http://127.0.0.1:8005/issuecertificate`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -73,9 +73,11 @@
             <select required
                 class="w-full mt-2 h-10 border border-gray-300 rounded-md focus:outline-none focus:border-sky-500 px-2"
                 id="selectcourse">
-                <option value="1">Certified Blockchain Associate</option>
-                <option value="2">Certified Cyber Security</option>
-                <option value="3">Certified Blockchain Associate 3</option>
+                <option value="Certified Blockchain Associate">Certified Blockchain Associate</option>
+                <option value="Certified Cyber Security">Certified Cyber Security</option>
+                <option value="Certified Cyber Forensic">Certified Cyber Forensic</option>
+                <option value="Certified Python Course">Certified Python Course</option>
+                <option value="Certified Web Development">Certified Web Development</option>
             </select>
         </div>
 
@@ -99,9 +101,9 @@
             <select id="grade" required
                 class="w-full mt-2 h-10 border border-gray-300 rounded-md focus:outline-none focus:border-sky-500 px-2">
                 <option value="select" disabled selected>--- Select ---</option>
-                <option value="1">S</option>
-                <option value="2">A</option>
-                <option value="3">A+</option>
+                <option value="S">S</option>
+                <option value="A">A</option>
+                <option value="A+">A+</option>
             </select>
         </div>
 
